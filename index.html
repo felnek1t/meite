@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Форум - Как рассчитать кредит в 1С</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+        .forum-header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .forum-container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .post {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 20px;
+        }
+        .post-header {
+            font-weight: bold;
+            color: #333;
+        }
+        .post-content {
+            margin-top: 10px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        .code {
+            background-color: #f4f4f4;
+            border: 1px solid #ccc;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin-top: 10px;
+        }
+        .reply {
+            background-color: #f9f9f9;
+            padding: 10px;
+            margin-top: 20px;
+        }
+
+        /* Оповещение о техническом обслуживании */
+        .maintenance-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            z-index: 9999;
+            text-align: center;
+            padding: 20px;
+        }
+        .maintenance-message {
+            max-width: 800px;
+            background-color: #222;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 18px;
+        }
+        .close-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .close-btn:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Оверлей с сообщением о техническом обслуживании -->
+<div id="maintenanceOverlay" class="maintenance-overlay">
+    <div class="maintenance-message">
+        <strong>Сайт находится на техническом обслуживании</strong><br><br>
+        Мы проводим работы по улучшению форума. Пока что все данные и сообщения пользователей не изменились, однако доступ к новым функциям ограничен. Пожалуйста, подождите некоторое время, чтобы мы могли улучшить ваш опыт.<br><br>
+        Благодарим за понимание!
+        <br><br>
+        <button class="close-btn" onclick="closeMaintenance()">Закрыть</button>
+    </div>
+</div>
+
+<div class="forum-header">
+    <h1>Как рассчитать кредит в 1С</h1>
+    <p>Тема обсуждения: расчет кредита в 1С</p>
+</div>
+
+<div class="forum-container">
+    <!-- Первый пост с вопросом -->
+    <div class="post">
+        <div class="post-header">phoenix777 (22.11.11 10:38)</div>
+        <div class="post-content">
+            Здравствуйте! Есть такая задача: нужно рассчитать кредит в 1С на основе суммы кредита, срока и процентной ставки. Как правильно рассчитать кредит с учетом этих параметров? Можно ли использовать такой код для расчета кредита?
+        </div>
+    </div>
+
+    <!-- Ответ на пост -->
+    <div class="post">
+        <div class="post-header">Eugene_life (23.11.11 12:52)</div>
+        <div class="post-content">
+            В вашем случае расчет кредита можно выполнить с помощью следующего кода:
+            <div class="code">
+                СтрТабЧасти = Элементы."ваша таблица".ТекущиеДанные; 
+                // Устанавливаем ПроцентнуюСтавку из справочника
+                СтрТабЧасти.ПроцентнаяСтавка = ИзвлечьРеквизит("ваш процент"); 
+
+                // Проверяем, что необходимые поля заполнены
+                Если ЗначениеЗаполнено("сумма кредита") И
+                   ЗначениеЗаполнено("срок кредита") И
+                   ЗначениеЗаполнено(СтрТабЧасти.ПроцентнаяСтавка) Тогда 
+
+                    // Рассчитываем месячную ставку
+                    МесячнаяСтавка = СтрТабЧасти.ПроцентнаяСтавка / 100 / 12;
+
+                    Если МесячнаяСтавка > 0 И "срок кредита" > 0 Тогда
+                        // Рассчитываем коэффициент
+                        Основание = 1 + МесячнаяСтавка;
+                        ВозведениеВСтепень = 1;
+                        Для Сч = 1 По СтрТабЧасти.СрокКредита Цикл
+                            ВозведениеВСтепень = ВозведениеВСтепень * Основание;
+                        КонецЦикла;
+
+                        Коэффициент = (МесячнаяСтавка * ВозведениеВСтепень) /
+                                      (ВозведениеВСтепень - 1);
+
+                        // Рассчитываем сумму к возврату
+                        "полученный кредит" = Окр("сумма кредита" * Коэффициент * СтрТабЧасти.СрокКредита, 2); 
+                    Иначе
+                          "полученный кредит" = 0;
+                    КонецЕсли;
+                Иначе
+                      "полученный кредит" = 0;
+                КонецЕсли;
+            </div>
+            Этот код учитывает сумму кредита, срок и процентную ставку, после чего вычисляет ежемесячный платеж и общую сумму к возврату.
+        </div>
+    </div>
+
+    <!-- Следующий ответ -->
+    <div class="post">
+        <div class="post-header">strange2007 (23.11.11 14:44)</div>
+        <div class="post-content">
+            Я думаю, этот код вполне подойдет для вашего случая. Важно, чтобы в таблице были правильно указаны все реквизиты, и код должен работать корректно. Если возникнут проблемы, могу помочь в отладке.
+        </div>
+    </div>
+	<!-- Следующий ответ -->
+    <div class="post">
+        <div class="post-header">phoenix777 (24.11.11 9:44)</div>
+        <div class="post-content">
+            Спасибо всё работает.
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Функция для закрытия окна оповещения
+    function closeMaintenance() {
+        document.getElementById('maintenanceOverlay').style.display = 'none';
+    }
+</script>
+
+</body>
+</html>
